@@ -362,12 +362,7 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 
-Assets/Plugins/
-Assets/Settings/
-Assets/Resources/
-Assets/TextMesh Pro/
 
-Assets/DefaultVolumeProfile.asset
 
 # This .gitignore file should be placed at the root of your Unity project directory
 #
@@ -468,3 +463,22 @@ InitTestScene*.unity*
 
 # Auto-generated scenes by play mode tests
 /[Aa]ssets/[Ii]nit[Tt]est[Ss]cene*.unity*
+
+Assets/Plugins/
+Assets/Settings/
+Assets/Resources/
+Assets/TextMesh Pro/
+
+Assets/DefaultVolumeProfile.assetAssets/Plugins/
+Assets/Settings/
+Assets/Resources/
+Assets/TextMesh Pro/
+
+Assets/DefaultVolumeProfile.assetAssets/Plugins/
+Assets/Settings/
+Assets/Resources/
+Assets/TextMesh Pro/
+
+Assets/DefaultVolumeProfile.asset
+Assets/InputSystem_Actions.inputactions
+Assets/UniversalRenderPipelineGlobalSettings.asset
