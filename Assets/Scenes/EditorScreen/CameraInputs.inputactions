@@ -1,0 +1,85 @@
+{
+    "version": 1,
+    "name": "CameraInputs",
+    "maps": [
+        {
+            "name": "Zoom",
+            "id": "225cf2fe-7409-4fa9-a068-27289876fd3a",
+            "actions": [
+                {
+                    "name": "New action",
+                    "type": "Value",
+                    "id": "e4871ddd-a28f-4ddd-be4d-d32782cda4bd",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "8dad8766-c763-4b8e-963f-622f1344a9c7",
+                    "path": "<Mouse>/scroll/y",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "New action",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "Move",
+            "id": "26e830cf-1c11-4d47-a67e-9779eb57bc95",
+            "actions": [
+                {
+                    "name": "New action",
+                    "type": "Value",
+                    "id": "cfda18b8-54d0-432a-8b09-53e03d5e2b07",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "Press",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "One Modifier",
+                    "id": "83a45aa2-6dfa-44a1-a19c-5c950a5ba877",
+                    "path": "OneModifier",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "",
+                    "action": "New action",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "Modifier",
+                    "id": "5355a3e0-0e6f-45a6-92c8-fbcffb4c61e8",
+                    "path": "<Mouse>/middleButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "New action",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "binding",
+                    "id": "8e5660d4-cc33-48b2-95c7-55927b15b6e2",
+                    "path": "<Mouse>/delta",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "New action",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
