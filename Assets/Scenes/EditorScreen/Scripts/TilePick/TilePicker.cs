@@ -70,6 +70,9 @@ public class InitTilePicker : MonoBehaviour
                 );
 
             buttonTilePick.GetComponent<Image>().sprite = tileData.sprite;
+            buttonTilePick.GetComponent<Button>().onClick.AddListener(() => TileEvents.TileSelect(tileData));
+
+            
 
             buttonTilePick.transform.DOScale(1.2f, 0.5f).SetEase(Ease.InBack).SetLoops(2, LoopType.Yoyo);
 

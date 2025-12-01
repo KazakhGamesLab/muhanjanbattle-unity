@@ -79,6 +79,34 @@
                     "isPartOfComposite": true
                 }
             ]
+        },
+        {
+            "name": "PlaceTile",
+            "id": "4f19c094-4046-4233-b039-5e4434af1688",
+            "actions": [
+                {
+                    "name": "New action",
+                    "type": "Value",
+                    "id": "0e721b57-b8c7-44ba-9573-f58d5ccd97ca",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "7c899beb-fcf1-4e1b-8f19-35806a00ccc8",
+                    "path": "<Mouse>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "New action",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": []
