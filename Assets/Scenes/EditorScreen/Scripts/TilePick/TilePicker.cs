@@ -13,6 +13,9 @@ public class InitTilePicker : MonoBehaviour
     private GameObject _prefabTileGroup;
     [SerializeField]
     private GameObject _prefabTilePickButton;
+    [SerializeField]
+    private GameObject _selectedTilePickButton;
+
 
     private struct GroupTiles
     {
@@ -63,19 +66,19 @@ public class InitTilePicker : MonoBehaviour
             }
 
 
-            GameObject buttonTilePick = 
+            GameObject buttonTilePick =
                 Instantiate(
-                    _prefabTilePickButton, 
+                    _prefabTilePickButton,
                     groupContainer.transform.Find("TilesGrid").transform
                 );
 
+            buttonTilePick.name = tileData.tileName;
             buttonTilePick.GetComponent<Image>().sprite = tileData.sprite;
-            buttonTilePick.GetComponent<Button>().onClick.AddListener(() => TileEvents.TileSelect(tileData));
+            buttonTilePick.GetComponent<Button>().onClick.AddListener(() => EventsManager.TileSelect(tileData));
+            buttonTilePick.GetComponent<Button>().onClick.AddListener(() => SelectTilePreview(buttonTilePick));
 
-            
 
             buttonTilePick.transform.DOScale(1.2f, 0.5f).SetEase(Ease.InBack).SetLoops(2, LoopType.Yoyo);
-
         }
     }
 
@@ -88,5 +91,33 @@ public class InitTilePicker : MonoBehaviour
         }
 
         return null;
+    }
+
+
+    private void SwitchTile(GameObject tile)
+    {
+        if (_selectedTilePickButton == tile)
+        {
+            tile.transform.Find("BorderSelected").gameObject.SetActive(false);
+            tile.transform.Find("Border").gameObject.SetActive(true);
+            _selectedTilePickButton = null;
+            return;
+        }
+
+        if (_selectedTilePickButton != null)
+        {
+            _selectedTilePickButton.transform.Find("BorderSelected").gameObject.SetActive(false);
+            _selectedTilePickButton.transform.Find("Border").gameObject.SetActive(true);
+        }
+
+        _selectedTilePickButton = tile;
+        _selectedTilePickButton.transform.Find("BorderSelected").gameObject.SetActive(true);
+        _selectedTilePickButton.transform.Find("Border").gameObject.SetActive(false);
+    }
+
+
+    private void SelectTilePreview(GameObject tile)
+    {
+        SwitchTile(tile);
     }
 }

@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Tilemaps;
 
-public class TilewPrewiew : MonoBehaviour
+public class TilePrewiew : MonoBehaviour
 {
 
     public Tilemap tilemap;     
@@ -13,16 +13,18 @@ public class TilewPrewiew : MonoBehaviour
 
     private void OnEnable()
     {
-        TileEvents.OnTileSelect += SelectTilePreview;
+        EventsManager.OnTileSelect += SelectTilePreview;
     }
 
     private void OnDisable()
     {
-        TileEvents.OnTileSelect -= SelectTilePreview;
+        EventsManager.OnTileSelect -= SelectTilePreview;
     }
 
     public void SelectTilePreview(TileData data)
     {
+
+
         if (previewGO != null)
             Destroy(previewGO);
 

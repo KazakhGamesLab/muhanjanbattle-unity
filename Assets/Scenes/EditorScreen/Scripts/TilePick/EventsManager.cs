@@ -1,7 +1,7 @@
 using UnityEngine;
 using System;
 
-public class TileEvents : MonoBehaviour
+public class EventsManager : MonoBehaviour
 {
     public static event Action<TileData> OnTileSelect;
 
