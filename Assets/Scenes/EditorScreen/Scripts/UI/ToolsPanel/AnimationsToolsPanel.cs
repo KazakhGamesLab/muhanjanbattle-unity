@@ -10,7 +10,7 @@ public class AnimationsToolsPanel : MonoBehaviour
 
     public void ClosePanel()
     {
-        transform.DOMoveX(transform.position.x + 370, 0.5f).SetEase(Ease.InBack).OnComplete(() =>
+        transform.DOMoveX(transform.position.x + 410, 0.5f).SetEase(Ease.InBack).OnComplete(() =>
         {
             gameObject.SetActive(false);
         });
@@ -19,7 +19,7 @@ public class AnimationsToolsPanel : MonoBehaviour
     public void OpenPanel()
     {
         gameObject.SetActive(true);
-        transform.DOMoveX(transform.position.x - 370, 0.5f).SetEase(Ease.OutBack);
+        transform.DOMoveX(transform.position.x - 410, 0.5f).SetEase(Ease.OutBack);
     }
 
-}
+} 

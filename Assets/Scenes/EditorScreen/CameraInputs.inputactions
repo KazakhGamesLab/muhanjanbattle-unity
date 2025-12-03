@@ -3,13 +3,22 @@
     "name": "CameraInputs",
     "maps": [
         {
-            "name": "Zoom",
+            "name": "Scrolls",
             "id": "225cf2fe-7409-4fa9-a068-27289876fd3a",
             "actions": [
                 {
-                    "name": "New action",
+                    "name": "ZoomScroll",
                     "type": "Value",
                     "id": "e4871ddd-a28f-4ddd-be4d-d32782cda4bd",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "CtrlScroll",
+                    "type": "Value",
+                    "id": "faf89afe-4cf3-4be6-8259-d21bd675d2d8",
                     "expectedControlType": "Axis",
                     "processors": "",
                     "interactions": "",
@@ -19,14 +28,47 @@
             "bindings": [
                 {
                     "name": "",
-                    "id": "8dad8766-c763-4b8e-963f-622f1344a9c7",
+                    "id": "29f13f05-892b-4430-870f-310a608b0e09",
                     "path": "<Mouse>/scroll/y",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "New action",
+                    "action": "ZoomScroll",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "One Modifier",
+                    "id": "08cae2da-f5d0-4bd3-b782-d84bb8680760",
+                    "path": "OneModifier",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "",
+                    "action": "CtrlScroll",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "modifier",
+                    "id": "c82bee29-e786-4213-aecd-870de4ddf2c9",
+                    "path": "<Keyboard>/leftCtrl",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "CtrlScroll",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "binding",
+                    "id": "be8dc994-f2f1-4e88-81cc-ad7988ea179a",
+                    "path": "<Mouse>/scroll/y",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "CtrlScroll",
+                    "isComposite": false,
+                    "isPartOfComposite": true
                 }
             ]
         },
