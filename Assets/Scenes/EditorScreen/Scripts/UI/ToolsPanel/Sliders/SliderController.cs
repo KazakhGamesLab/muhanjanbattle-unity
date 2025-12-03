@@ -9,19 +9,6 @@ public class SlidersController : MonoBehaviour
 
     private GameObject _selectedSlider;
 
-    private int _sizeBrush = 0;
-
-    private void OnEnable()
-    {
-        EventsManager.OnValueChangedSlider += SliderHandler;
-    }
-
-    private void OnDisable()
-    {
-        EventsManager.OnValueChangedSlider -= SliderHandler;
-    }
-
-
     private void Awake()
     {
         _selectedSliderButton.SetSelect(true);
@@ -36,13 +23,6 @@ public class SlidersController : MonoBehaviour
 
         _selectedSliderButton.SetSelect(true);
         _selectedSlider = _selectedSliderButton.GetSlider();
-        _selectedSlider.GetComponentInChildren<Slider>()
-            .SetValueWithoutNotify(_sizeBrush);
-    }
-
-    private void SliderHandler(float value)
-    {
-        _sizeBrush = (int)value;
     }
 
 }

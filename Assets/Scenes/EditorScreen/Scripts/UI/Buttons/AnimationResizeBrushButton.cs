@@ -2,6 +2,7 @@ using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using static UnityEngine.Rendering.DebugUI;
 
 public class AnimationResizeBrushButton : MonoBehaviour, IPointerEnterHandler
 {
@@ -16,6 +17,19 @@ public class AnimationResizeBrushButton : MonoBehaviour, IPointerEnterHandler
     private GameObject _canvasOwner;
     private GameObject _sliderInstance;
     private bool _isSelected = false;
+
+    private int _sizeBrush = 0;
+
+
+    private void OnEnable()
+    {
+        EventsManager.OnValueChangedSlider += SliderHandler;
+    }
+
+    private void OnDisable()
+    {
+        EventsManager.OnValueChangedSlider -= SliderHandler;
+    }
 
     private void Awake()
     {
@@ -65,6 +79,9 @@ public class AnimationResizeBrushButton : MonoBehaviour, IPointerEnterHandler
 
         _sliderInstance = Instantiate(sliderPrefab, _canvasOwner.transform);
         _sliderInstance.name = $"{name}_Slider";
+        _sliderInstance.GetComponentInChildren<Slider>()
+            .SetValueWithoutNotify(_sizeBrush);
+
 
         var img = _sliderInstance.GetComponent<Image>();
         var cg = _sliderInstance.GetComponent<CanvasGroup>();
@@ -75,7 +92,6 @@ public class AnimationResizeBrushButton : MonoBehaviour, IPointerEnterHandler
             cg.blocksRaycasts = false;
         }
 
-        // позиционируем и анимируем
         _sliderInstance.transform.position = transform.position;
         _sliderInstance.transform.localScale = Vector3.zero;
 
@@ -99,5 +115,10 @@ public class AnimationResizeBrushButton : MonoBehaviour, IPointerEnterHandler
     public GameObject GetSlider()
     {
         return _sliderInstance;
+    }
+
+    private void SliderHandler(float value)
+    {
+        _sizeBrush = (int)value;
     }
 }
