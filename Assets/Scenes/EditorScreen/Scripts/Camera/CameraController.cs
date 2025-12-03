@@ -22,6 +22,9 @@ public class CameraController : MonoBehaviour
     {
         if (!context.performed) return;
 
+        if (Keyboard.current.leftCtrlKey.isPressed || Keyboard.current.rightCtrlKey.isPressed)
+            return;
+
         PixelPerfectCamera _camera = this._camera.GetComponent<PixelPerfectCamera>();
 
         float zoomChange = context.ReadValue<float>() * zoomSpeed;

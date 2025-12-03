@@ -7,12 +7,9 @@ public class SlidersController : MonoBehaviour
     [SerializeField]
     private AnimationResizeBrushButton _selectedSliderButton;
 
-    private GameObject _selectedSlider;
-
     private void Awake()
     {
         _selectedSliderButton.SetSelect(true);
-        _selectedSlider = _selectedSliderButton.GetSlider();
     }
 
     public void SelectSlider(AnimationResizeBrushButton slider)
@@ -22,7 +19,6 @@ public class SlidersController : MonoBehaviour
         _selectedSliderButton = slider;
 
         _selectedSliderButton.SetSelect(true);
-        _selectedSlider = _selectedSliderButton.GetSlider();
     }
 
 }

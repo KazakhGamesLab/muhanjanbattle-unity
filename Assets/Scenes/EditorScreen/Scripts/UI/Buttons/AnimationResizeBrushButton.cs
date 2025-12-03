@@ -13,23 +13,12 @@ public class AnimationResizeBrushButton : MonoBehaviour, IPointerEnterHandler
 
     [Header("Runtime")]
     [SerializeField] private string canvasName = "CanvasUI";
+    [SerializeField] private BrushController _brushController;
+
 
     private GameObject _canvasOwner;
     private GameObject _sliderInstance;
     private bool _isSelected = false;
-
-    private int _sizeBrush = 0;
-
-
-    private void OnEnable()
-    {
-        EventsManager.OnValueChangedSlider += SliderHandler;
-    }
-
-    private void OnDisable()
-    {
-        EventsManager.OnValueChangedSlider -= SliderHandler;
-    }
 
     private void Awake()
     {
@@ -80,7 +69,7 @@ public class AnimationResizeBrushButton : MonoBehaviour, IPointerEnterHandler
         _sliderInstance = Instantiate(sliderPrefab, _canvasOwner.transform);
         _sliderInstance.name = $"{name}_Slider";
         _sliderInstance.GetComponentInChildren<Slider>()
-            .SetValueWithoutNotify(_sizeBrush);
+            .SetValueWithoutNotify(_brushController.Size);
 
 
         var img = _sliderInstance.GetComponent<Image>();
@@ -117,8 +106,4 @@ public class AnimationResizeBrushButton : MonoBehaviour, IPointerEnterHandler
         return _sliderInstance;
     }
 
-    private void SliderHandler(float value)
-    {
-        _sizeBrush = (int)value;
-    }
 }

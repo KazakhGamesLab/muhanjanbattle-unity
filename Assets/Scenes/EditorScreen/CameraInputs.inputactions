@@ -14,15 +14,6 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
-                },
-                {
-                    "name": "CtrlScroll",
-                    "type": "Value",
-                    "id": "faf89afe-4cf3-4be6-8259-d21bd675d2d8",
-                    "expectedControlType": "Axis",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -36,39 +27,6 @@
                     "action": "ZoomScroll",
                     "isComposite": false,
                     "isPartOfComposite": false
-                },
-                {
-                    "name": "One Modifier",
-                    "id": "08cae2da-f5d0-4bd3-b782-d84bb8680760",
-                    "path": "OneModifier",
-                    "interactions": "Press",
-                    "processors": "",
-                    "groups": "",
-                    "action": "CtrlScroll",
-                    "isComposite": true,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "modifier",
-                    "id": "c82bee29-e786-4213-aecd-870de4ddf2c9",
-                    "path": "<Keyboard>/leftCtrl",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "CtrlScroll",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "binding",
-                    "id": "be8dc994-f2f1-4e88-81cc-ad7988ea179a",
-                    "path": "<Mouse>/scroll/y",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "CtrlScroll",
-                    "isComposite": false,
-                    "isPartOfComposite": true
                 }
             ]
         },
@@ -123,7 +81,7 @@
             ]
         },
         {
-            "name": "PlaceTile",
+            "name": "MoveTilePreview",
             "id": "4f19c094-4046-4233-b039-5e4434af1688",
             "actions": [
                 {
@@ -145,6 +103,34 @@
                     "processors": "",
                     "groups": "",
                     "action": "New action",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "PlaceTile",
+            "id": "1137b96b-3eb1-4dd1-b95a-bfd397a209ea",
+            "actions": [
+                {
+                    "name": "PlaceTile",
+                    "type": "Button",
+                    "id": "cd04c24f-d236-42d5-8f6b-3d39d216a6d6",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "b9ea56a6-9dac-4cd6-8205-f07e22a80aec",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "",
+                    "action": "PlaceTile",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

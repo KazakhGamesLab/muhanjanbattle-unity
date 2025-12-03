@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public enum BrushMode
 {
@@ -12,6 +13,9 @@ public class BrushController : MonoBehaviour
     public static BrushController Instance { get; private set; }
 
     public int Size { get; private set; } = 1;
+
+    private const int MinSize = 1;
+    private const int MaxSize = 8;
     public BrushMode Mode { get; private set; } = BrushMode.Square;
 
     private void Awake()
@@ -27,21 +31,41 @@ public class BrushController : MonoBehaviour
 
     private void OnEnable()
     {
-        EventsManager.OnValueChangedSlider += SetSize;
+        EventsManager.OnValueChangedSlider += OnSliderChanged;
     }
 
     private void OnDisable()
     {
-        EventsManager.OnValueChangedSlider -= SetSize;
+        EventsManager.OnValueChangedSlider -= OnSliderChanged;
     }
 
-    public void SetSize(float value)
+    public void SetSizeInt(int newSize)
     {
-        int newSize = Mathf.Max(1, (int)value);
-        if (newSize == Size) return;
+        newSize = Mathf.Clamp(newSize, MinSize, MaxSize);
+        if (Size == newSize) return;
 
         Size = newSize;
         EventsManager.BrushSizeChanged(Size);
+    }
+
+    public void OnSliderChanged(float value)
+    {
+        SetSizeInt((int)value);
+    }
+
+
+    public void OnScroll(InputAction.CallbackContext context)
+    {
+        if (!context.performed) return;
+
+        if (!Keyboard.current.leftCtrlKey.isPressed)
+            return;
+
+        float scroll = context.ReadValue<float>();
+        int delta = scroll > 0 ? 1 : (scroll < 0 ? -1 : 0);
+        if (delta == 0) return;
+
+        SetSizeInt(Size + delta);
     }
 
     public void SetSquareMode() => Mode = BrushMode.Square;

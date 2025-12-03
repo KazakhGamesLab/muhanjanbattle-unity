@@ -1147,6 +1147,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3df812c3efada884ab112962663dae2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TilePainter
+  tilemap: {fileID: 245049391}
 --- !u!1 &666332496
 GameObject:
   m_ObjectHideFlags: 0
@@ -1472,6 +1473,7 @@ Transform:
   - {fileID: 556624924}
   - {fileID: 1133182800}
   - {fileID: 140746629}
+  - {fileID: 1609541196}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &802172778
@@ -1811,6 +1813,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 556624928}
+        m_TargetAssemblyTypeName: BrushController, Assembly-CSharp
+        m_MethodName: OnScroll
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: e4871ddd-a28f-4ddd-be4d-d32782cda4bd
     m_ActionName: 'Zoom/New action[/Mouse/scroll/y]'
   - m_PersistentCalls:
@@ -1846,9 +1860,21 @@ MonoBehaviour:
     m_ActionId: 0e721b57-b8c7-44ba-9573-f58d5ccd97ca
     m_ActionName: 'PlaceTile/New action[/Mouse/position]'
   - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: faf89afe-4cf3-4be6-8259-d21bd675d2d8
-    m_ActionName: 'Zoom/CtrlScroll[/Keyboard/leftCtrl,/Mouse/scroll/y]'
+      m_Calls:
+      - m_Target: {fileID: 556624929}
+        m_TargetAssemblyTypeName: TilePainter, Assembly-CSharp
+        m_MethodName: OnPaint
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: cd04c24f-d236-42d5-8f6b-3d39d216a6d6
+    m_ActionName: 'PlaceTile/PlaceTile[/Mouse/leftButton]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: 
@@ -2729,6 +2755,7 @@ MonoBehaviour:
   selectButtonSprite: {fileID: 21300000, guid: 679ae3f7350649a489140a83fb9f3364, type: 3}
   defaultButtonSprite: {fileID: 21300000, guid: 29fee5075c6d6df4ebdc5936d276f5b9, type: 3}
   canvasName: CanvasUI
+  _brushController: {fileID: 556624928}
 --- !u!1 &1511617073
 GameObject:
   m_ObjectHideFlags: 0
@@ -2873,6 +2900,50 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1543871217}
   m_CullTransparentMesh: 1
+--- !u!1 &1609541195
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1609541196}
+  - component: {fileID: 1609541197}
+  m_Layer: 0
+  m_Name: SceneManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1609541196
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1609541195}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 800318744}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1609541197
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1609541195}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b04700d0159e2e449cc8b67cc87c1c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SceneManagerEditor
 --- !u!1 &1650097837
 GameObject:
   m_ObjectHideFlags: 0
@@ -3502,6 +3573,7 @@ MonoBehaviour:
   selectButtonSprite: {fileID: 21300000, guid: 5b524a7a9b180614dbf1803a5379096c, type: 3}
   defaultButtonSprite: {fileID: 21300000, guid: b374cdba576c8714b86e83126e5d52eb, type: 3}
   canvasName: CanvasUI
+  _brushController: {fileID: 556624928}
 --- !u!1 &2146531196
 GameObject:
   m_ObjectHideFlags: 0
