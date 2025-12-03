@@ -7,6 +7,7 @@ public class EventsManager : MonoBehaviour
 
     public static event Action<float> OnValueChangedSlider;
 
+    public static  event Action<int> OnBrushSizeChanged;
 
     public static void TileSelect(TileData data)
     {
@@ -17,4 +18,10 @@ public class EventsManager : MonoBehaviour
     {
         OnValueChangedSlider?.Invoke(value);
     }
+
+    public static void BrushSizeChanged(int value)
+    {
+        OnBrushSizeChanged?.Invoke(value);
+    }
+
 }

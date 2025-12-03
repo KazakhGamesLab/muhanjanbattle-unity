@@ -1,3 +1,4 @@
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Tilemaps;
@@ -5,11 +6,16 @@ using UnityEngine.Tilemaps;
 public class TilePrewiew : MonoBehaviour
 {
 
-    public Tilemap tilemap;     
-    public Sprite selectedSprite;
+    [Header("References")]
+    [SerializeField] private Tilemap tilemap;
 
-    private Tile previewTile;
-    private GameObject previewGO;
+    [Header("Preview settings")]
+    [Tooltip("Alpha for preview sprites")]
+    [Range(0.0f, 1.0f)]
+    [SerializeField] private float previewAlpha = 0.6f;
+
+    private Sprite _selectedSprite;
+    private readonly List<GameObject> _previewTiles = new();
 
     private void OnEnable()
     {
@@ -19,47 +25,90 @@ public class TilePrewiew : MonoBehaviour
     private void OnDisable()
     {
         EventsManager.OnTileSelect -= SelectTilePreview;
+        ClearPreview();
     }
 
     public void SelectTilePreview(TileData data)
     {
-
-
-        if (previewGO != null)
-            Destroy(previewGO);
-
-
-        if (selectedSprite == data.sprite)
+        // Toggle same tile off
+        if (data == null)
         {
-            selectedSprite = null;
-            Destroy(previewGO);
+            _selectedSprite = null;
+            ClearPreview();
             return;
         }
 
-        selectedSprite = data.sprite;
+        if (_selectedSprite == data.sprite)
+        {
+            _selectedSprite = null;
+            ClearPreview();
+            return;
+        }
 
-        previewTile = ScriptableObject.CreateInstance<Tile>();
-        previewTile.sprite = selectedSprite;
+        _selectedSprite = data.sprite;
+        ClearPreview();
+        CreatePreviewTiles();
+    }
 
-        
+    private void CreatePreviewTiles()
+    {
+        if (_selectedSprite == null || BrushController.Instance == null)
+            return;
 
-        previewGO = new GameObject("TilePreview");
-        SpriteRenderer sr = previewGO.AddComponent<SpriteRenderer>();
-        sr.sprite = selectedSprite;
-        sr.sortingOrder = 100;
+        int required = BrushController.Instance.GetBrushTiles(Vector2Int.zero).Count;
+
+        for (int i = 0; i < required; i++)
+        {
+            GameObject go = new GameObject($"PreviewTile_{i}");
+            var sr = go.AddComponent<SpriteRenderer>();
+            sr.sprite = _selectedSprite;
+            sr.color = new Color(1f, 1f, 1f, previewAlpha);
+            sr.sortingOrder = 100;
+            // Optional: parent to this for cleanliness
+            go.transform.SetParent(transform, true);
+
+            _previewTiles.Add(go);
+        }
+    }
+
+    private void ClearPreview()
+    {
+        for (int i = 0; i < _previewTiles.Count; i++)
+        {
+            var go = _previewTiles[i];
+            if (go != null)
+                Destroy(go);
+        }
+
+        _previewTiles.Clear();
     }
 
 
     public void TilePreview(InputAction.CallbackContext context)
     {
-        if (previewGO == null || !context.performed)
+        if (!context.performed || _selectedSprite == null || tilemap == null || BrushController.Instance == null)
             return;
 
-        Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
-        mouseWorldPos.z = 0;
+        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+        mousePos.z = 0f;
 
-        Vector3Int cellPos = tilemap.WorldToCell(mouseWorldPos);
-        Vector3 cellCenter = tilemap.GetCellCenterWorld(cellPos);
-        previewGO.transform.position = cellCenter;
+        Vector3Int cellPos = tilemap.WorldToCell(mousePos);
+        List<Vector2Int> brushTiles = BrushController.Instance.GetBrushTiles(new Vector2Int(cellPos.x, cellPos.y));
+
+        // если количество превью не соответствует кисти — пересоздать
+        if (brushTiles.Count != _previewTiles.Count)
+        {
+            ClearPreview();
+            CreatePreviewTiles();
+        }
+
+        // обновляем позиции превью
+        int limit = Mathf.Min(brushTiles.Count, _previewTiles.Count);
+        for (int i = 0; i < limit; i++)
+        {
+            Vector3Int brushCell = new Vector3Int(brushTiles[i].x, brushTiles[i].y, 0);
+            Vector3 worldPos = tilemap.GetCellCenterWorld(brushCell);
+            _previewTiles[i].transform.position = worldPos;
+        }
     }
 }

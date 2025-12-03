@@ -1,123 +1,101 @@
 using DG.Tweening;
 using System.Collections.Generic;
-using TMPro;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class InitTilePicker : MonoBehaviour
 {
-    [SerializeField]
-    private GameObject _parentContainer;
-    [SerializeField]
-    private GameObject _prefabTileGroup;
-    [SerializeField]
-    private GameObject _prefabTilePickButton;
-    [SerializeField]
+    [SerializeField] private GameObject parentContainer;
+    [SerializeField] private GameObject prefabTileGroup;
+    [SerializeField] private GameObject prefabTilePickButton;
+
     private GameObject _selectedTilePickButton;
-
-
-    private struct GroupTiles
-    {
-        public  TileGroup group;
-        public  GameObject groupContainer;
-
-        public GroupTiles(TileGroup group, GameObject groupContainer)
-        {
-            this.group = group;
-            this.groupContainer = groupContainer;
-        }
-    }
-
+    private readonly List<(TileGroup group, GameObject container)> _groups = new();
     private TileData[] _tilesData;
-
-    private List<GroupTiles> _groupsTiles = new List<GroupTiles>();
 
     private void Awake()
     {
         _tilesData = Resources.LoadAll<TileData>("Shared/TilesData");
-        InitTilesPick();
+        InitTilesUI();
     }
 
-    private void InitTilesPick()
+    private void InitTilesUI()
     {
+        if (_tilesData == null || prefabTileGroup == null || prefabTilePickButton == null || parentContainer == null)
+        {
+            Debug.LogWarning("InitTilePicker: one of the references is null.");
+            return;
+        }
 
         foreach (TileData tileData in _tilesData)
         {
-            GroupTiles? foundGroup = FindGroup(tileData.tileEnum.tileGroup);
+            if (tileData == null) continue;
 
-            GameObject groupContainer = null;
+            GameObject container = GetOrCreateGroup(tileData.tileEnum.tileGroup, tileData.tileEnum.groupName);
 
-            if (foundGroup == null)
+            var tilesGrid = container.transform.Find("TilesGrid");
+            Transform parent = tilesGrid != null ? tilesGrid : container.transform;
+
+            GameObject btn = Instantiate(prefabTilePickButton, parent);
+            btn.name = tileData.tileName;
+
+            var img = btn.GetComponent<Image>();
+            if (img != null) img.sprite = tileData.sprite;
+
+            var button = btn.GetComponent<Button>();
+            if (button != null)
             {
-                groupContainer = Instantiate(_prefabTileGroup, _parentContainer.transform);
-                GameObject TileGroupName = 
-                    groupContainer.transform.Find("TileGroupName").gameObject;
-
-                var tmpUGUI = TileGroupName.GetComponent<TMPro.TextMeshProUGUI>();
-                tmpUGUI.text = tileData.tileEnum.groupName;
-
-                GroupTiles newGroup = new GroupTiles(tileData.tileEnum.tileGroup, groupContainer);
-                _groupsTiles.Add(newGroup);
-            }
-            else
-            {
-                groupContainer = foundGroup.Value.groupContainer;
+                button.onClick.AddListener(() =>
+                {
+                    EventsManager.TileSelect(tileData);
+                    HighlightSelected(btn);
+                });
             }
 
-
-            GameObject buttonTilePick =
-                Instantiate(
-                    _prefabTilePickButton,
-                    groupContainer.transform.Find("TilesGrid").transform
-                );
-
-            buttonTilePick.name = tileData.tileName;
-            buttonTilePick.GetComponent<Image>().sprite = tileData.sprite;
-            buttonTilePick.GetComponent<Button>().onClick.AddListener(() => EventsManager.TileSelect(tileData));
-            buttonTilePick.GetComponent<Button>().onClick.AddListener(() => SelectTilePreview(buttonTilePick));
-
-
-            buttonTilePick.transform.DOScale(1.2f, 0.5f).SetEase(Ease.InBack).SetLoops(2, LoopType.Yoyo);
+            btn.transform.DOScale(1.2f, 0.5f).SetEase(Ease.InBack).SetLoops(2, LoopType.Yoyo);
         }
     }
 
-    private GroupTiles? FindGroup(TileGroup group)
+    private GameObject GetOrCreateGroup(TileGroup group, string groupName)
     {
-        foreach (var g in _groupsTiles)
-        {
+        foreach (var g in _groups)
             if (g.group == group)
-                return g;
+                return g.container;
+
+        GameObject newContainer = Instantiate(prefabTileGroup, parentContainer.transform);
+        var nameTf = newContainer.transform.Find("TileGroupName");
+        if (nameTf != null)
+        {
+            var tmp = nameTf.GetComponent<TMPro.TextMeshProUGUI>();
+            if (tmp != null) tmp.text = groupName;
         }
 
-        return null;
+        _groups.Add((group, newContainer));
+        return newContainer;
     }
 
-
-    private void SwitchTile(GameObject tile)
+    private void HighlightSelected(GameObject tile)
     {
         if (_selectedTilePickButton == tile)
         {
-            tile.transform.Find("BorderSelected").gameObject.SetActive(false);
-            tile.transform.Find("Border").gameObject.SetActive(true);
+            SetBorder(tile, false);
             _selectedTilePickButton = null;
             return;
         }
 
         if (_selectedTilePickButton != null)
-        {
-            _selectedTilePickButton.transform.Find("BorderSelected").gameObject.SetActive(false);
-            _selectedTilePickButton.transform.Find("Border").gameObject.SetActive(true);
-        }
+            SetBorder(_selectedTilePickButton, false);
 
         _selectedTilePickButton = tile;
-        _selectedTilePickButton.transform.Find("BorderSelected").gameObject.SetActive(true);
-        _selectedTilePickButton.transform.Find("Border").gameObject.SetActive(false);
+        SetBorder(_selectedTilePickButton, true);
     }
 
-
-    private void SelectTilePreview(GameObject tile)
+    private void SetBorder(GameObject tile, bool selected)
     {
-        SwitchTile(tile);
+        var border = tile.transform.Find("Border");
+        var borderSelected = tile.transform.Find("BorderSelected");
+
+        if (border != null) border.gameObject.SetActive(!selected);
+        if (borderSelected != null) borderSelected.gameObject.SetActive(selected);
     }
 }

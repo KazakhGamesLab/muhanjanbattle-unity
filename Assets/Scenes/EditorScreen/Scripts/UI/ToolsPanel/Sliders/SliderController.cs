@@ -36,7 +36,8 @@ public class SlidersController : MonoBehaviour
 
         _selectedSliderButton.SetSelect(true);
         _selectedSlider = _selectedSliderButton.GetSlider();
-        _selectedSlider.GetComponentInChildren<Slider>().value = _sizeBrush;
+        _selectedSlider.GetComponentInChildren<Slider>()
+            .SetValueWithoutNotify(_sizeBrush);
     }
 
     private void SliderHandler(float value)

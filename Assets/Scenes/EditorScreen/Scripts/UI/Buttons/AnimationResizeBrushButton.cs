@@ -2,29 +2,24 @@ using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using UnityEngine.UIElements;
-using Image = UnityEngine.UI.Image;
 
 public class AnimationResizeBrushButton : MonoBehaviour, IPointerEnterHandler
 {
+    [Header("Prefabs & Sprites")]
+    [SerializeField] private GameObject sliderPrefab;
+    [SerializeField] private Sprite selectButtonSprite;
+    [SerializeField] private Sprite defaultButtonSprite;
+
+    [Header("Runtime")]
+    [SerializeField] private string canvasName = "CanvasUI";
+
     private GameObject _canvasOwner;
-
-    [SerializeField]
-    private GameObject _sliderPrefab;
-
-    [SerializeField]
-    private Sprite _selectButtonSprite;
-
-    [SerializeField]
-    private Sprite _defaultButtonSprite;
-
+    private GameObject _sliderInstance;
     private bool _isSelected = false;
-
-    private GameObject _slider;
 
     private void Awake()
     {
-        _canvasOwner = GameObject.Find("CanvasUI");
+        _canvasOwner = GameObject.Find(canvasName);
         SwitchSprite();
     }
 
@@ -33,67 +28,76 @@ public class AnimationResizeBrushButton : MonoBehaviour, IPointerEnterHandler
         _isSelected = isSelected;
         SwitchSprite();
 
-
-        if (!_isSelected && _slider != null)
+        if (!_isSelected)
         {
-            _slider.GetComponent<AnimationsSlider>().CloseSlider();
+            if (_sliderInstance != null)
+            {
+                var anim = _sliderInstance.GetComponent<AnimationsSlider>();
+                if (anim != null)
+                {
+                    anim.CloseSlider();
+                }
+                else
+                {
+                    Destroy(_sliderInstance);
+                }
+
+                _sliderInstance = null;
+            }
+
+            return;
         }
 
-
-        if (_canvasOwner != null)
-        {
-            CreateSlider();
-        }
+        CreateSlider();
     }
-
 
     private void SwitchSprite()
     {
-        Image image = GetComponent<Image>();
-
-        if (_isSelected)
-        {
-            image.sprite = _selectButtonSprite;
-        }
-
-        if (!_isSelected)
-        {
-            image.sprite = _defaultButtonSprite;
-        }
+        var image = GetComponent<Image>();
+        if (image == null) return;
+        image.sprite = _isSelected ? selectButtonSprite : defaultButtonSprite;
     }
 
     public void CreateSlider()
     {
-        if (!_isSelected) { return; }
+        if (!_isSelected || sliderPrefab == null || _canvasOwner == null) return;
+        if (_sliderInstance != null) return;
 
-        if (_slider != null) { return; }
+        _sliderInstance = Instantiate(sliderPrefab, _canvasOwner.transform);
+        _sliderInstance.name = $"{name}_Slider";
 
-        _slider = Instantiate(_sliderPrefab, _canvasOwner.transform);
-        _slider.GetComponent<Image>().raycastTarget = false;
-        _slider.transform.position = transform.position;
-        _slider.transform.localScale = new Vector2(0, 0);
-
-
-        _slider.transform.DOScale(1f, 0.3f).SetEase(Ease.OutBack)
-        .OnComplete(() =>
+        var img = _sliderInstance.GetComponent<Image>();
+        var cg = _sliderInstance.GetComponent<CanvasGroup>();
+        if (img != null) img.raycastTarget = false;
+        if (cg != null)
         {
-            _slider.GetComponent<Image>().raycastTarget = true;
-            _slider.GetComponent<CanvasGroup>().interactable = true;
-            _slider.GetComponent<CanvasGroup>().blocksRaycasts = true;
+            cg.interactable = false;
+            cg.blocksRaycasts = false;
+        }
+
+        // позиционируем и анимируем
+        _sliderInstance.transform.position = transform.position;
+        _sliderInstance.transform.localScale = Vector3.zero;
+
+        _sliderInstance.transform.DOScale(1f, 0.28f).SetEase(Ease.OutBack).OnComplete(() =>
+        {
+            if (img != null) img.raycastTarget = true;
+            if (cg != null)
+            {
+                cg.interactable = true;
+                cg.blocksRaycasts = true;
+            }
         });
     }
 
-
     public void OnPointerEnter(PointerEventData eventData)
     {
-        CreateSlider();
+        if (_isSelected)
+            CreateSlider();
     }
-
 
     public GameObject GetSlider()
     {
-        if (_slider != null) { return _slider; }
-
-        return null;
+        return _sliderInstance;
     }
 }
