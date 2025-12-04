@@ -37,7 +37,7 @@ public class InitTilePicker : MonoBehaviour
             Transform parent = tilesGrid != null ? tilesGrid : container.transform;
 
             GameObject btn = Instantiate(prefabTilePickButton, parent);
-            btn.name = tileData.tileName;
+            btn.name = tileData.previewName;
 
             var img = btn.GetComponent<Image>();
             if (img != null) img.sprite = tileData.sprite;

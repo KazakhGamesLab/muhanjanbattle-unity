@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ef53e2fa1bf1f840b8d1901ae9cddf3, type: 3}
   m_Name: GrayColor
   m_EditorClassIdentifier: Assembly-CSharp::TileData
+  previewName: "\u0421\u0435\u0440\u044B\u0439"
   tileName: gray
   sprite: {fileID: 21300000, guid: 1fa6d9e9ba9f4f3448daa0c73b0f84f5, type: 3}
   tileEnum: {fileID: 11400000, guid: d5a31a5142feba94cae0063f2c85640d, type: 2}

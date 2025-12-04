@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ef53e2fa1bf1f840b8d1901ae9cddf3, type: 3}
   m_Name: PinkColor
   m_EditorClassIdentifier: Assembly-CSharp::TileData
+  previewName: "\u0420\u043E\u0437\u043E\u0432\u044B\u0439"
   tileName: pink
   sprite: {fileID: 21300000, guid: a90541ec5e0ee3f46b0826a61baf8048, type: 3}
   tileEnum: {fileID: 11400000, guid: d5a31a5142feba94cae0063f2c85640d, type: 2}
