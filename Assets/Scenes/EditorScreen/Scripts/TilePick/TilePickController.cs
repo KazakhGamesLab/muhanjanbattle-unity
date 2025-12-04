@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
@@ -12,11 +13,14 @@ public class TilePickController : MonoBehaviour
     private void OnDisable()
     {
         EventsManager.OnGetTileServer -= OnGetTileServer;
+        EventsManager.OnGetTilesJson -= OnGetTilesJson;
     }
 
     private void OnEnable()
     {
         EventsManager.OnGetTileServer += OnGetTileServer;
+        EventsManager.OnGetTilesJson += OnGetTilesJson;
+
     }
 
     private void Awake()
@@ -54,5 +58,23 @@ public class TilePickController : MonoBehaviour
             Debug.LogWarning($"No TileData found for tileName: '{tile.tileName}'. Available: {string.Join(", ", _tileCache.Keys)}");
         }
     }
+
+
+    private void OnGetTilesJson(string json)
+    {
+        try
+        {
+            var tile = JsonUtility.FromJson<TileDataSerializable>(json);
+            if (tile != null)
+            {
+                OnGetTileServer(tile);
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"JSON parse failed: {json} | {ex.Message}");
+        }
+    }
+
 
 }

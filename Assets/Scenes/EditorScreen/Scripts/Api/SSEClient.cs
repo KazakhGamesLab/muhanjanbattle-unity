@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Text;
@@ -17,6 +18,8 @@ public class TileDataSerializable
     public string brushMode;
     public string updated_at;
 }
+
+
 
 public static class JsonHelper
 {
@@ -102,18 +105,47 @@ public class SSEClient : MonoBehaviour
             using var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
             using var reader = new StreamReader(stream, Encoding.UTF8);
 
+            string eventType = string.Empty;
+            var dataLines = new List<string>();
 
-            while (!ct.IsCancellationRequested)
+            while (!ct.IsCancellationRequested && await reader.ReadLineAsync() is string line)
             {
-                string line = await reader.ReadLineAsync().ConfigureAwait(false);
-
-                if (line.StartsWith("data:"))
+                if (line.StartsWith("event:"))
                 {
-                    string jsonData = line["data:".Length..].Trim();
-                    if (!string.IsNullOrEmpty(jsonData))
+                    eventType = line["event:".Length..].Trim();
+                }
+                else if (line.StartsWith("data:"))
+                {
+                    dataLines.Add(line["data:".Length..]);
+                }
+                else if (line.StartsWith(":"))
+                {
+                    continue;
+                }
+                else if (string.IsNullOrWhiteSpace(line))
+                {
+                    if (dataLines.Count > 0)
                     {
-                        MainThreadDispatcher.Enqueue(() => ProcessTileData(jsonData));
+                        string jsonData = string.Join("\n", dataLines).TrimEnd('\n');
+                        if (!string.IsNullOrEmpty(jsonData))
+                        {
+                            var eData = new EventData(eventType, jsonData);
+                            MainThreadDispatcher.Enqueue(() => EventsManager.SSEEventHandler(eData));
+                        }
+
+                        eventType = string.Empty; 
+                        dataLines.Clear();
                     }
+                }
+            }
+
+            if (dataLines.Count > 0)
+            {
+                string jsonData = string.Join("\n", dataLines).TrimEnd('\n');
+                if (!string.IsNullOrEmpty(jsonData))
+                {
+                    var eData = new EventData(eventType, jsonData);
+                    MainThreadDispatcher.Enqueue(() => EventsManager.SSEEventHandler(eData));
                 }
             }
         }
@@ -123,21 +155,7 @@ public class SSEClient : MonoBehaviour
         }
     }
 
-    void ProcessTileData(string jsonData)
-    {
-        try
-        {
-            var tile = JsonUtility.FromJson<TileDataSerializable>(jsonData);
-            if (tile != null)
-            {
-                EventsManager.GetTileServer(tile);
-            }
-        }
-        catch (Exception ex)
-        {
-            Debug.LogError($"JSON parse failed: {jsonData} | {ex.Message}");
-        }
-    }
+    
 
     void OnDestroy()
     {

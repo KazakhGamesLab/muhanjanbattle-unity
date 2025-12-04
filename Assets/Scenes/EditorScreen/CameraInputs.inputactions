@@ -35,12 +35,21 @@
             "id": "26e830cf-1c11-4d47-a67e-9779eb57bc95",
             "actions": [
                 {
-                    "name": "New action",
+                    "name": "MidlleButton",
                     "type": "Value",
                     "id": "cfda18b8-54d0-432a-8b09-53e03d5e2b07",
                     "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": "Press",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "MoveMouse",
+                    "type": "Value",
+                    "id": "2c35df00-a7c3-453d-b1d2-eeb48355f3ae",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
                     "initialStateCheck": true
                 }
             ],
@@ -52,7 +61,7 @@
                     "interactions": "Press",
                     "processors": "",
                     "groups": "",
-                    "action": "New action",
+                    "action": "MidlleButton",
                     "isComposite": true,
                     "isPartOfComposite": false
                 },
@@ -63,7 +72,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "New action",
+                    "action": "MidlleButton",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -74,9 +83,20 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "New action",
+                    "action": "MidlleButton",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "37c76d52-2f5b-464d-80cf-8371d08b16e3",
+                    "path": "<Mouse>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MoveMouse",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },

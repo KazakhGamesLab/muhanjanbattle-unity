@@ -8,15 +8,15 @@ public class CameraController : MonoBehaviour
     [SerializeField]
     private GameObject _camera;
 
-    private float zoomSpeed = 1f;
-    private float moveSpeed = 0.10f;
-    private Vector3 targetPos;
+    public float zoomSpeed = 1f;
+    public float moveSpeed = 0.10f;
+    public Vector3 targetPos;
 
     [SerializeField]
-    private int minAssetsPPU;
+    public int minAssetsPPU;
 
     [SerializeField]
-    private int maxAssetsPPU;
+    public int maxAssetsPPU;
 
     public void ZoomHandler(InputAction.CallbackContext context)
     {

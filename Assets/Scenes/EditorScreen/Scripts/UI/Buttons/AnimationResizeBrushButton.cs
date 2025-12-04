@@ -84,6 +84,7 @@ public class AnimationResizeBrushButton : MonoBehaviour, IPointerEnterHandler
         _sliderInstance.transform.position = transform.position;
         _sliderInstance.transform.localScale = Vector3.zero;
 
+        _sliderInstance.transform.DOMoveY(_sliderInstance.transform.position.y  + 50f, 0.28f).SetEase(Ease.OutBack);
         _sliderInstance.transform.DOScale(1f, 0.28f).SetEase(Ease.OutBack).OnComplete(() =>
         {
             if (img != null) img.raycastTarget = true;
