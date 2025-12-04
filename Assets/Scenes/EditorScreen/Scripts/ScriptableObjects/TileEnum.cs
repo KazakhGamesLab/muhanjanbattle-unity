@@ -11,7 +11,8 @@ public enum TileGroup
 public enum TileSubGroup
 {
     Earth,
-    Water
+    Water,
+    Plants
 }
 
 [CreateAssetMenu(fileName = "NewTileEnum", menuName = "2D/Tiles/TileEnum")]
