@@ -54,7 +54,6 @@ public class TilePainter : MonoBehaviour
         );
 
         string json = JsonUtility.ToJson(info, true);
-        Debug.Log(json);
 
         await ApiClient.SendTilesAsync(info);
     }

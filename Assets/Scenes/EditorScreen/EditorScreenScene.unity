@@ -1123,6 +1123,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4908e5806bae28540aa6e853bae01da2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TilePickController
+  tilemap: {fileID: 245049391}
 --- !u!114 &556624928
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2910,6 +2911,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1609541196}
   - component: {fileID: 1609541197}
+  - component: {fileID: 1609541198}
+  - component: {fileID: 1609541199}
   m_Layer: 0
   m_Name: SceneManager
   m_TagString: Untagged
@@ -2944,6 +2947,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b04700d0159e2e449cc8b67cc87c1c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SceneManagerEditor
+--- !u!114 &1609541198
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1609541195}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1152788cc6995a429013e8ea4554a62, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WebSocketClient
+--- !u!114 &1609541199
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1609541195}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65262427074a58044a3c5455286c5c75, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MainThreadDispatcher
 --- !u!1 &1650097837
 GameObject:
   m_ObjectHideFlags: 0

@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ef53e2fa1bf1f840b8d1901ae9cddf3, type: 3}
   m_Name: WaterData
   m_EditorClassIdentifier: Assembly-CSharp::TileData
-  tileName: "\u0412\u043E\u0434\u0430"
+  tileName: water
   sprite: {fileID: 21300000, guid: ccb734c2d62aba943b22c85e0f46e818, type: 3}
   tileEnum: {fileID: 11400000, guid: 8c49b9cd095dd3140880e965b52966b9, type: 2}

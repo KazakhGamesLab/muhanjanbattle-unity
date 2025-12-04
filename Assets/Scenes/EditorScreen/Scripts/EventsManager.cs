@@ -9,6 +9,8 @@ public class EventsManager : MonoBehaviour
 
     public static  event Action<int> OnBrushSizeChanged;
 
+    public static  event Action<TileDataSerializable> OnGetTileServer;
+
     public static void TileSelect(TileData data)
     {
         OnTileSelect?.Invoke(data);
@@ -24,4 +26,8 @@ public class EventsManager : MonoBehaviour
         OnBrushSizeChanged?.Invoke(value);
     }
 
+    public static void GetTileServer(TileDataSerializable value)
+    {
+        OnGetTileServer?.Invoke(value);
+    }
 }

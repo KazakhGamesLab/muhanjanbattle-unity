@@ -35,13 +35,14 @@ public class TileBulkData
     }
 }
 
+
 /// <summary>
 /// —татический клиент дл€ работы с сервером FastAPI
 /// </summary>
 public static class ApiClient
 {
-    private static string _baseDomain = "http://localhost:8001";
-    private static string _apiBase = "/api/v1";
+    private static string _baseDomain = "http://" + SettingConnection._baseDomain;
+    private static string _apiBase = SettingConnection._apiBase;
 
     /// <summary>
     /// ”становить базовый домен, чтобы не указывать каждый раз
@@ -96,7 +97,6 @@ public static class ApiClient
         string response = await PostAsync("tiles-bulk", json);
         if (response != null)
         {
-            Debug.Log($"Tiles sent successfully: {response}");
             return true;
         }
 
