@@ -9,7 +9,7 @@ public class CameraController : MonoBehaviour
     private GameObject _camera;
 
     private float zoomSpeed = 1f;
-    private float moveSpeed = 0.20f;
+    private float moveSpeed = 0.10f;
     private Vector3 targetPos;
 
     [SerializeField]

@@ -3296,7 +3296,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraController
   _camera: {fileID: 928653339}
-  minAssetsPPU: 16
+  minAssetsPPU: 0
   maxAssetsPPU: 128
 --- !u!1 &2052732621
 GameObject:
