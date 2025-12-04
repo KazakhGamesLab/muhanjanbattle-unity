@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,6 +10,9 @@ public class TilePosition
 {
     public int x;
     public int y;
+
+    // JsonUtility С‚СЂРµР±СѓРµС‚ РїР°СЂР°РјРµС‚СЂless РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
+    public TilePosition() { }
 
     public TilePosition(int x, int y)
     {
@@ -26,6 +29,8 @@ public class TileBulkData
     public string brushMode;
     public List<TilePosition> positions;
 
+    public TileBulkData() { }
+
     public TileBulkData(string tileName, int brushSize, string brushMode, List<TilePosition> positions)
     {
         this.tileName = tileName;
@@ -35,18 +40,14 @@ public class TileBulkData
     }
 }
 
-
 /// <summary>
-/// Статический клиент для работы с сервером FastAPI
+/// РЎС‚Р°С‚РёС‡РµСЃРєРёР№ РєР»РёРµРЅС‚ РґР»СЏ СЂР°Р±РѕС‚С‹ СЃ СЃРµСЂРІРµСЂРѕРј FastAPI
 /// </summary>
 public static class ApiClient
 {
     private static string _baseDomain = "http://" + SettingConnection._baseDomain;
     private static string _apiBase = SettingConnection._apiBase;
 
-    /// <summary>
-    /// Установить базовый домен, чтобы не указывать каждый раз
-    /// </summary>
     public static void SetDomain(string domain)
     {
         _baseDomain = domain.TrimEnd('/');
@@ -57,9 +58,6 @@ public static class ApiClient
         return $"{_baseDomain}{_apiBase}/{path.TrimStart('/')}";
     }
 
-    /// <summary>
-    /// Отправка JSON на любой эндпоинт POST
-    /// </summary>
     public static async Task<string> PostAsync(string endpoint, string json)
     {
         byte[] bodyRaw = Encoding.UTF8.GetBytes(json);
@@ -69,9 +67,10 @@ public static class ApiClient
             request.uploadHandler = new UploadHandlerRaw(bodyRaw);
             request.downloadHandler = new DownloadHandlerBuffer();
             request.SetRequestHeader("Content-Type", "application/json");
+            request.SetRequestHeader("Content-Length", bodyRaw.Length.ToString()); // в†ђ РљР›Р®Р§Р•Р’РћР• РРЎРџР РђР’Р›Р•РќРР•
 
-            var operation = request.SendWebRequest();
-            while (!operation.isDone)
+            var op = request.SendWebRequest();
+            while (!op.isDone)
                 await Task.Yield();
 
 #if UNITY_2020_1_OR_NEWER
@@ -80,7 +79,8 @@ public static class ApiClient
             if (request.isNetworkError || request.isHttpError)
 #endif
             {
-                Debug.LogError($"ApiClient POST error: {request.error}");
+                // Р’С‹РІРѕРґРёРј РЅРµ С‚РѕР»СЊРєРѕ РѕС€РёР±РєСѓ, РЅРѕ Рё URL + JSON РґР»СЏ РѕС‚Р»Р°РґРєРё
+                Debug.LogError($"POST failed to {BuildUrl(endpoint)}\nJSON: {json}\nError: {request.error}");
                 return null;
             }
 
@@ -88,31 +88,20 @@ public static class ApiClient
         }
     }
 
-    /// <summary>
-    /// Специализированный метод для отправки тайлов на /tiles-bulk
-    /// </summary>
     public static async Task<bool> SendTilesAsync(TileBulkData data)
     {
         string json = JsonUtility.ToJson(data);
         string response = await PostAsync("tiles-bulk", json);
-        if (response != null)
-        {
-            return true;
-        }
-
-        return false;
+        return response != null;
     }
 
-    /// <summary>
-    /// Удобный метод для текущей кисти и позиций
-    /// </summary>
     public static async Task SendCurrentBrushAsync(string tileName, int brushSize, string brushMode, List<Vector2Int> positions)
     {
-        List<TilePosition> posList = new List<TilePosition>();
+        var posList = new List<TilePosition>();
         foreach (var p in positions)
             posList.Add(new TilePosition(p.x, p.y));
 
-        TileBulkData data = new TileBulkData(tileName, brushSize, brushMode, posList);
+        var data = new TileBulkData(tileName, brushSize, brushMode, posList);
         await SendTilesAsync(data);
     }
 }
