@@ -5,6 +5,7 @@ public enum TileGroup
 {
     Terrain,
     Waterform,
+    Palette
 }
 
 [SerializeField]
@@ -12,7 +13,8 @@ public enum TileSubGroup
 {
     Earth,
     Water,
-    Plants
+    Plants,
+    Colors
 }
 
 [CreateAssetMenu(fileName = "NewTileEnum", menuName = "2D/Tiles/TileEnum")]
