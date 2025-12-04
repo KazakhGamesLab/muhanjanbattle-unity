@@ -22,7 +22,6 @@ public class TilePickController : MonoBehaviour
     private void Awake()
     {
         TileData[] tileDatas = Resources.LoadAll<TileData>("Shared/TilesData");
-        Debug.Log($"[TilePickController] Loaded {tileDatas.Length} TileData assets from 'Shared/TilesData'");
 
         _tileCache = new Dictionary<string, TileBase>();
         foreach (TileData td in tileDatas)
@@ -33,7 +32,6 @@ public class TilePickController : MonoBehaviour
                 tile.sprite = td.sprite;
                 tile.name = "RuntimeTile_" + td.tileName;
                 _tileCache[td.tileName] = tile;
-                Debug.Log($" - Cached tile: '{td.tileName}'");
             }
         }
     }
@@ -46,13 +44,10 @@ public class TilePickController : MonoBehaviour
             return;
         }
 
-        Debug.Log(tile.tileName);
-
         if (_tileCache.TryGetValue(tile.tileName, out TileBase tileBase))
         {
             Vector3Int position = new Vector3Int(tile.x, tile.y, 0);
             tilemap.SetTile(position, tileBase);
-            Debug.Log($"Placed '{tile.tileName}' at ({tile.x}, {tile.y})");
         }
         else
         {

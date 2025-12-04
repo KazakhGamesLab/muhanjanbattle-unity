@@ -37,8 +37,8 @@ public class SSEClient : MonoBehaviour
 {
     private CancellationTokenSource cts;
 
-    private string TilesUrl => $"http://{SettingConnection._baseDomain}{SettingConnection._apiBase}/tiles";
-    private string StreamUrl => $"http://{SettingConnection._baseDomain}{SettingConnection._apiBase}/tiles-stream";
+    private string TilesUrl => $"https://{SettingConnection._baseDomain}{SettingConnection._apiBase}/tiles";
+    private string StreamUrl => $"https://{SettingConnection._baseDomain}{SettingConnection._apiBase}/tiles-stream";
 
     void Start()
     {
@@ -72,9 +72,7 @@ public class SSEClient : MonoBehaviour
             string json = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
             TileDataSerializable[] tiles = JsonHelper.FromJson<TileDataSerializable>(json);
 
-            Debug.Log($"Loaded {tiles.Length} initial tiles");
 
-            // Отправляем каждый тайл в систему
             foreach (var tile in tiles)
             {
                 MainThreadDispatcher.Enqueue(() => EventsManager.GetTileServer(tile));

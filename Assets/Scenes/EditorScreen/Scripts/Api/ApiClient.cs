@@ -45,7 +45,7 @@ public class TileBulkData
 /// </summary>
 public static class ApiClient
 {
-    private static string _baseDomain = "http://" + SettingConnection._baseDomain;
+    private static string _baseDomain = "https://" + SettingConnection._baseDomain;
     private static string _apiBase = SettingConnection._apiBase;
 
     public static void SetDomain(string domain)
@@ -61,6 +61,7 @@ public static class ApiClient
     public static async Task<string> PostAsync(string endpoint, string json)
     {
         byte[] bodyRaw = Encoding.UTF8.GetBytes(json);
+
 
         using (UnityWebRequest request = new UnityWebRequest(BuildUrl(endpoint), "POST"))
         {
