@@ -68,7 +68,7 @@ public static class ApiClient
             request.uploadHandler = new UploadHandlerRaw(bodyRaw);
             request.downloadHandler = new DownloadHandlerBuffer();
             request.SetRequestHeader("Content-Type", "application/json");
-            request.SetRequestHeader("Content-Length", bodyRaw.Length.ToString()); // ← КЛЮЧЕВОЕ ИСПРАВЛЕНИЕ
+            request.SetRequestHeader("Content-Length", bodyRaw.Length.ToString()); 
 
             var op = request.SendWebRequest();
             while (!op.isDone)
@@ -80,7 +80,6 @@ public static class ApiClient
             if (request.isNetworkError || request.isHttpError)
 #endif
             {
-                // Выводим не только ошибку, но и URL + JSON для отладки
                 Debug.LogError($"POST failed to {BuildUrl(endpoint)}\nJSON: {json}\nError: {request.error}");
                 return null;
             }
@@ -92,6 +91,7 @@ public static class ApiClient
     public static async Task<bool> SendTilesAsync(TileBulkData data)
     {
         string json = JsonUtility.ToJson(data);
+
         string response = await PostAsync("tiles-bulk", json);
         return response != null;
     }

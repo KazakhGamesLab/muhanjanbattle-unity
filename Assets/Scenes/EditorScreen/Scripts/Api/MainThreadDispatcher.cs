@@ -1,46 +1,40 @@
+// MainThreadDispatcher.cs
 using System;
-using System.Collections.Concurrent;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class MainThreadDispatcher : MonoBehaviour
 {
-    private static MainThreadDispatcher instance;
-    private static readonly ConcurrentQueue<Action> executeOnMainThread = new ConcurrentQueue<Action>();
+    private static MainThreadDispatcher _instance;
+    private static readonly Queue<Action> _executionQueue = new Queue<Action>();
 
     public static void Enqueue(Action action)
     {
-        if (instance == null)
+        lock (_executionQueue)
         {
-            Debug.LogError("MainThreadDispatcher not initialized!");
-            return;
+            _executionQueue.Enqueue(action);
         }
-        executeOnMainThread.Enqueue(action);
     }
 
     void Awake()
     {
-        if (instance == null)
-        {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
+        if (_instance != null)
         {
             Destroy(gameObject);
+            return;
         }
+        _instance = this;
+        DontDestroyOnLoad(gameObject);
     }
 
     void Update()
     {
-        while (executeOnMainThread.TryDequeue(out var action))
+        lock (_executionQueue)
         {
-            try
+            while (_executionQueue.Count > 0)
             {
+                var action = _executionQueue.Dequeue();
                 action?.Invoke();
-            }
-            catch (Exception ex)
-            {
-                Debug.LogException(ex);
             }
         }
     }

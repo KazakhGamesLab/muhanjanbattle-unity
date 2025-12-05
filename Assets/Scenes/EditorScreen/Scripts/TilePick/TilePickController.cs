@@ -1,32 +1,38 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Rendering.Universal;
 using UnityEngine.Tilemaps;
 
 public class TilePickController : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private Tilemap tilemap;
-    [SerializeField] private Dictionary<string, TileBase> _tileCache = new Dictionary<string, TileBase>();
-
-    private void OnDisable()
-    {
-        EventsManager.OnGetTileServer -= OnGetTileServer;
-        EventsManager.OnGetTilesJson -= OnGetTilesJson;
-    }
+    private Dictionary<string, TileBase> _tileCache = new();
 
     private void OnEnable()
     {
-        EventsManager.OnGetTileServer += OnGetTileServer;
+        // Подписываемся на НОВЫЕ события
+        EventsManager.OnTileCreated += OnTileCreated;
+        EventsManager.OnTileDeleted += OnTileDeleted;
+        EventsManager.OnTilesCreatedBulk += OnTilesCreatedBulk;
+        EventsManager.OnTilesDeletedBulk += OnTilesDeletedBulk;
         EventsManager.OnGetTilesJson += OnGetTilesJson;
+    }
+
+    private void OnDisable()
+    {
+        // Отписываемся
+        EventsManager.OnTileCreated -= OnTileCreated;
+        EventsManager.OnTileDeleted -= OnTileDeleted;
+        EventsManager.OnTilesCreatedBulk -= OnTilesCreatedBulk;
+        EventsManager.OnTilesDeletedBulk -= OnTilesDeletedBulk;
+        EventsManager.OnGetTilesJson -= OnGetTilesJson;
 
     }
 
     private void Awake()
     {
         TileData[] tileDatas = Resources.LoadAll<TileData>("Shared/TilesData");
-
         _tileCache = new Dictionary<string, TileBase>();
         foreach (TileData td in tileDatas)
         {
@@ -40,22 +46,29 @@ public class TilePickController : MonoBehaviour
         }
     }
 
-    private void OnGetTileServer(TileDataSerializable tile)
+    void OnTileCreated(TileDataSerializable tile) => SetTile(tile);
+    void OnTilesCreatedBulk(TileDataSerializable[] tiles)
     {
-        if (tilemap == null)
-        {
-            Debug.LogError("Tilemap is not assigned!");
-            return;
-        }
+        foreach (var t in tiles) SetTile(t);
+    }
 
-        if (_tileCache.TryGetValue(tile.tileName, out TileBase tileBase))
+    void OnTileDeleted(int x, int y) => tilemap?.SetTile(new Vector3Int(x, y, 0), null);
+    void OnTilesDeletedBulk(TileCoord[] coords)
+    {
+        foreach (var c in coords)
+            tilemap?.SetTile(new Vector3Int(c.x, c.y, 0), null);
+    }
+
+    void SetTile(TileDataSerializable tile)
+    {
+        if (tilemap == null) return;
+        if (_tileCache.TryGetValue(tile.tileName, out var tileBase))
         {
-            Vector3Int position = new Vector3Int(tile.x, tile.y, 0);
-            tilemap.SetTile(position, tileBase);
+            tilemap.SetTile(new Vector3Int(tile.x, tile.y, 0), tileBase);
         }
         else
         {
-            Debug.LogWarning($"No TileData found for tileName: '{tile.tileName}'. Available: {string.Join(", ", _tileCache.Keys)}");
+            Debug.LogWarning($"Tile '{tile.tileName}' not found in cache!");
         }
     }
 
@@ -65,16 +78,11 @@ public class TilePickController : MonoBehaviour
         try
         {
             var tile = JsonUtility.FromJson<TileDataSerializable>(json);
-            if (tile != null)
-            {
-                OnGetTileServer(tile);
-            }
+            if (tile != null) SetTile(tile);
         }
         catch (Exception ex)
         {
-            Debug.LogError($"JSON parse failed: {json} | {ex.Message}");
+            Debug.LogError($"JSON parse failed: {ex.Message}");
         }
     }
-
-
 }

@@ -7,20 +7,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 
-[System.Serializable]
-public class TileDataSerializable
-{
-    public int id;
-    public int x;
-    public int y;
-    public string tileName;
-    public string brushSize;  
-    public string brushMode;
-    public string updated_at;
-}
-
-
-
 public static class JsonHelper
 {
     public static T[] FromJson<T>(string json)
@@ -71,14 +57,12 @@ public class SSEClient : MonoBehaviour
         {
             var response = await httpClient.GetAsync(TilesUrl, ct).ConfigureAwait(false);
             response.EnsureSuccessStatusCode();
-
             string json = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+
             TileDataSerializable[] tiles = JsonHelper.FromJson<TileDataSerializable>(json);
-
-
             foreach (var tile in tiles)
             {
-                MainThreadDispatcher.Enqueue(() => EventsManager.GetTileServer(tile));
+                MainThreadDispatcher.Enqueue(() => EventsManager.GetTilesJson(JsonUtility.ToJson(tile)));
             }
         }
         catch (Exception ex)
@@ -108,8 +92,10 @@ public class SSEClient : MonoBehaviour
             string eventType = string.Empty;
             var dataLines = new List<string>();
 
-            while (!ct.IsCancellationRequested && await reader.ReadLineAsync() is string line)
+            while (!ct.IsCancellationRequested)
             {
+                string line = await reader.ReadLineAsync();
+
                 if (line.StartsWith("event:"))
                 {
                     eventType = line["event:".Length..].Trim();
@@ -118,24 +104,19 @@ public class SSEClient : MonoBehaviour
                 {
                     dataLines.Add(line["data:".Length..]);
                 }
-                else if (line.StartsWith(":"))
-                {
-                    continue;
-                }
                 else if (string.IsNullOrWhiteSpace(line))
                 {
-                    if (dataLines.Count > 0)
+                    if (dataLines.Count > 0 && eventType == "tile_event")
                     {
-                        string jsonData = string.Join("\n", dataLines).TrimEnd('\n');
+                        string jsonData = string.Join("\n", dataLines).Trim();
                         if (!string.IsNullOrEmpty(jsonData))
                         {
-                            var eData = new EventData(eventType, jsonData);
-                            MainThreadDispatcher.Enqueue(() => EventsManager.SSEEventHandler(eData));
+                            var eventData = new EventData(eventType, jsonData);
+                            MainThreadDispatcher.Enqueue(() => EventsManager.SSEEventHandler(eventData));
                         }
-
-                        eventType = string.Empty; 
-                        dataLines.Clear();
                     }
+                    eventType = string.Empty;
+                    dataLines.Clear();
                 }
             }
 

@@ -42,7 +42,6 @@ public class CursorView : MonoBehaviour
         Vector3 screenPos = new Vector3(screenMousePos.x, screenMousePos.y, -_camera.transform.position.z);
         Vector3 worldPos = _camera.ScreenToWorldPoint(screenPos);
 
-        // МАСШТАБИРОВАНИЕ: чтобы курсор был ОДНОГО размера на экране
         if (_pixelPerfectCamera != null)
         {
             // Ключевое: масштаб ОБРАТНО пропорционален assetsPPU
